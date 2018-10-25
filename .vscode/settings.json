@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.6/bin/python3"
+    "python.pythonPath": "/Users/matt/.local/share/virtualenvs/cam-cli-ODGpLxpg/bin/python",
+    "python.linting.enabled": false
 }
