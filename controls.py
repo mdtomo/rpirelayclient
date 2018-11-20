@@ -8,24 +8,30 @@ from prompt_toolkit.layout.controls import BufferControl, FormattedTextControl
 class ChannelSwitch(Button):
 
     instances = []
+    @property
+    def status(self):
+        return self.__status
 
-    def __init__(self, status, handler, handler_args):
-        super().__init__('text', handler)
-        self.status = status
-        self.current_style = None
-        self.control = FormattedTextControl(
-            self._get_text_fragments,
-            key_bindings=self._get_key_bindings(),
-            focusable=True)
-        self.control.show_cursor = False
-        self.handler_args = handler_args
-
+    @status.setter
+    def status(self, status):
+        self.__status = status
         if status:
             self.text = 'Enabled'
             self.current_style = '#5faf00'
         else:
             self.text = 'Disabled'
             self.current_style = '#ff5f5f'
+
+    def __init__(self, status, handler, handler_args):
+        super().__init__('text', handler)
+        self.current_style = None
+        self.status = status
+        self.control = FormattedTextControl(
+            self._get_text_fragments,
+            key_bindings=self._get_key_bindings(),
+            focusable=True)
+        self.control.show_cursor = False
+        self.handler_args = handler_args
 
         def get_style():
             if get_app().layout.has_focus(self):
@@ -43,7 +49,6 @@ class ChannelSwitch(Button):
             dont_extend_height=True)
         
         ChannelSwitch.instances.append(self)
-
 
     def _get_text_fragments(self):
         text = ('{:^%s}' % (self.width - 2)).format(self.text)
@@ -70,8 +75,3 @@ class ChannelSwitch(Button):
                 self.handler(self.handler_args)
 
         return kb
-        
-        
-        
-    
-    
