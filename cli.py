@@ -20,7 +20,6 @@ from layout import root_container, status_bar, info_bar, style_warning
 import utils
 
 
-program_quitting = False
 use_asyncio_event_loop()
 global_kb = KeyBindings()
 channel_kb = KeyBindings()
@@ -62,16 +61,6 @@ async def create_connection():
         status_bar.style = style_warning
         app.invalidate()
 
-    
-
-    #print('Sending message..')
-    #await send_data(str(datetime.now()))
-    #await asyncio.sleep(15)
-    #print('Closing connection.')
-    #writer.close()
-    #await writer.wait_closed()
-    #print('Waited to close.')
-
 
 async def message_queue_processor(queue):
     while True:
@@ -79,24 +68,22 @@ async def message_queue_processor(queue):
             if utils.message_queue[0] == 'quit':
                 break
             info_bar.text = 'Sending command.'
-            json_msg = json.dumps(utils.message_queue[0])
-            writer.write(json_msg.encode())
+            #json_msg = json.dumps(utils.message_queue[0])
+            #writer.write(json_msg.encode())
+            writer.write(utils.message_queue[0])
+            info_bar.text = f'{len(utils.message_queue[0])} bytes sent.'
             await writer.drain()
-            utils.message_queue.pop()
+            utils.message_queue.pop(0)
         else:
             await asyncio.sleep(0.5)
     print('Program quitting. Closing connection.')
-    writer.close()
+    if writer is not None:
+        writer.close()
 
 
 @global_kb.add('q')
 def quit(event):
-    global program_quitting
-    program_quitting = True
     utils.message_queue.append('quit')
-    #print('Program quitting. Closing connection.')
-    # if writer is not None:
-    #     writer.close()
     event.app.exit()
 
 
