@@ -3,19 +3,14 @@ import asyncio
 import json
 import prompt_toolkit as ptk
 from prompt_toolkit.application import get_app
-#from prompt_toolkit import widgets
 from prompt_toolkit.eventloop import use_asyncio_event_loop
 from prompt_toolkit.buffer import Buffer
-#from prompt_toolkit.layout.containers import VSplit, HSplit, Window
 from prompt_toolkit.layout.controls import BufferControl, FormattedTextControl
 from prompt_toolkit.layout.layout import Layout
-#from prompt_toolkit.layout import Float, FloatContainer
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
-#from prompt_toolkit.widgets import MenuItem, Button
 from datetime import datetime
 from config import Config as config
-#from controls import ChannelSwitch
 from layout import root_container, status_bar, info_bar, style_warning
 import utils
 
