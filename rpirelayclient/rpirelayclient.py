@@ -31,7 +31,6 @@ def main():
     message_queue_task = loop.create_task(message_queue_processor(utils.message_queue))
     final_task = asyncio.gather(connection_task, message_queue_task, app.run_async().to_asyncio_future())
     loop.run_until_complete(final_task)
-    # asyncio.run(create_connection())
 
 
 async def create_connection():

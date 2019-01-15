@@ -8,7 +8,7 @@ from controls import ChannelSwitch
 import utils
 
 
-info_bar = FormattedTextControl('Press TAB to toggle channels.', style='#0087d7')
+info_bar = FormattedTextControl('Press TAB to toggle channels.', style='#ffffff')
 style_warning = '#800000 bg:#a8a8a8 bold reverse'
 style_ok = '#005f00 bg:#a8a8a8 bold'
 status_bar = FormattedTextControl('text', style=style_ok)
