@@ -11,8 +11,9 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
 from datetime import datetime
 from config import Config as config
-from layout import root_container, status_bar, info_bar, style_warning
+from layout import root_container, status_bar, info_bar, style_warning, message_queue
 import utils
+from controls import ChannelSwitch
 
 
 use_asyncio_event_loop()
@@ -28,7 +29,7 @@ def main():
     app = ptk.Application(layout=Layout(root_container), key_bindings=global_kb, full_screen=True)
 
     connection_task = loop.create_task(create_connection())
-    message_queue_task = loop.create_task(message_queue_processor(utils.message_queue))
+    message_queue_task = loop.create_task(message_queue_processor(message_queue))
     final_task = asyncio.gather(connection_task, message_queue_task, app.run_async().to_asyncio_future())
     loop.run_until_complete(final_task)
 
@@ -43,9 +44,9 @@ async def create_connection():
 
         data = None
         while data is not b'':
-            data = await reader.read(200)
-            status_bar.text = f'Received: {data.decode()}'
-            app.invalidate()
+            data = await reader.read(4096)
+            if data is not b'':
+                process_data(data)
         
         status_bar.text = 'Server closed the connection.'
         status_bar.style = style_warning
@@ -58,16 +59,15 @@ async def create_connection():
 
 async def message_queue_processor(queue):
     while True:
-        if utils.message_queue:
-            if utils.message_queue[0] == 'quit':
-                break
-            info_bar.text = 'Sending command.'
-            #json_msg = json.dumps(utils.message_queue[0])
-            #writer.write(json_msg.encode())
-            writer.write(utils.message_queue[0])
-            info_bar.text = f'{len(utils.message_queue[0])} bytes sent.'
+        if message_queue and writer is not None: 
+            writer.write(message_queue[0])
+            info_bar.text = f'{len(message_queue[0])} bytes sent.'
+            app.invalidate()
             await writer.drain()
-            utils.message_queue.pop(0)
+            message_queue.pop(0)
+        elif message_queue and writer is None:
+            if message_queue[0] == 'quit':
+                break
         else:
             await asyncio.sleep(0.5)
     print('Program quitting. Closing connection.')
@@ -75,9 +75,17 @@ async def message_queue_processor(queue):
         writer.close()
 
 
+def process_data(data):
+    relay_states = tuple(json.loads(data.decode()))
+    for i, status in enumerate(relay_states):
+        ChannelSwitch.instances[i].status = status
+
+    app.invalidate()
+
+
 @global_kb.add('q')
 def quit(event):
-    utils.message_queue.append('quit')
+    message_queue.append('quit')
     event.app.exit()
 
 
@@ -93,6 +101,7 @@ def down(event):
     current_control = get_app().layout.current_control
     if isinstance(current_control, FormattedTextControl):
         info_bar.text = 'Space/Enter to enable/disable.'
+        app.invalidate()
 
 
 @global_kb.add('up')

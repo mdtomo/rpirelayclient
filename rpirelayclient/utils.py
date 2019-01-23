@@ -1,25 +1,4 @@
-from controls import ChannelSwitch
 import json
-
-
-message_queue = []
-
-
-# TODO
-# CommandRequest - Baseclass
-# ChannelRequest - Subclass
-# SystemRequest - Subclass
-# LoggingRequest - Subclass
-# CommandResponse - Baseclass
-
-# class CommandRequest():
-
-#     @property
-
-#     def __init__(self, data):
-#         # isinstance checking
-#         self.data = data
-#         self._fixed_header = len(data).to_bytes(2, byteorder='big')
 
 
 class ChannelRequest():
@@ -46,10 +25,3 @@ class ChannelRequest():
         message_header_bytes = self._create_message_header_payload(self.__class__.__name__, len(message_bytes))
         fixed_header_bytes = len(message_header_bytes).to_bytes(2, byteorder='big')
         return fixed_header_bytes + message_header_bytes + message_bytes
-
-
-def toggle_channel(number):
-    ChannelSwitch.instances[number].status = not ChannelSwitch.instances[number].status
-    #message_queue.append((number, ChannelSwitch.instances[number].status))
-    channel_request = ChannelRequest(number, ChannelSwitch.instances[number].status)
-    message_queue.append(channel_request.payload)
