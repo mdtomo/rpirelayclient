@@ -68,6 +68,9 @@ async def message_queue_processor(queue):
         elif message_queue and writer is None:
             if message_queue[0] == 'quit':
                 break
+            info_bar.text = 'No connection has been established. Please quit and try again.'
+            app.invalidate()
+            message_queue.pop(0)
         else:
             await asyncio.sleep(0.5)
     print('Program quitting. Closing connection.')
