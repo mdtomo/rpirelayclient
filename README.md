@@ -11,9 +11,11 @@ Rpirelayclient only has one external dependency - [Python Prompt Toolkit](https:
 
 Change the settings in config.py to the ip and port of you Raspberry Pi. Change the labels of the relays as desired.
 
-`pipenv install`
-`pipenv shell`
-`python rpirelayclient.py`
+```sh
+pipenv install
+pipenv shell
+python rpirelayclient.py
+```
 
 ## Licence
 This project is licensed under the MIT License - see the LICENSE.md file for details.

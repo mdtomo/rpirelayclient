@@ -59,20 +59,22 @@ async def create_connection():
 
 async def message_queue_processor(queue):
     while True:
-        if message_queue and writer is not None: 
-            writer.write(message_queue[0])
-            info_bar.text = f'{len(message_queue[0])} bytes sent.'
-            app.invalidate()
-            await writer.drain()
-            message_queue.pop(0)
-        elif message_queue and writer is None:
-            if message_queue[0] == 'quit':
+        if message_queue:
+            if message_queue[0] is 'quit':
                 break
-            info_bar.text = 'No connection has been established. Please quit and try again.'
-            app.invalidate()
-            message_queue.pop(0)
+            elif writer:
+                writer.write(message_queue[0])
+                info_bar.text = f'{len(message_queue[0])} bytes sent.'
+                app.invalidate()
+                await writer.drain()
+                message_queue.pop(0)
+            elif not writer:
+                info_bar.text = 'No connection has been established. Please quit and try again.'
+                app.invalidate()
+                message_queue.pop(0)
         else:
             await asyncio.sleep(0.5)
+
     print('Program quitting. Closing connection.')
     if writer is not None:
         writer.close()
