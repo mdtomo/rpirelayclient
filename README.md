@@ -6,8 +6,10 @@ This is the command client for connecting to a [Rpirelayserver](https://github.c
 ## Installation/Usage
 Rpirelayclient only has one external dependency - [Python Prompt Toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit)
 
-`git clone https://github.com/mdtomo/rpirelayclient`
-`cd rpirelayclient`
+```sh
+git clone https://github.com/mdtomo/rpirelayclient
+cd rpirelayclient
+```
 
 Change the settings in config.py to the ip and port of you Raspberry Pi. Change the labels of the relays as desired.
 

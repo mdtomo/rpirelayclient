@@ -54,6 +54,7 @@ async def create_connection():
     except OSError as e:
         status_bar.text = str(e.strerror)
         status_bar.style = style_warning
+        info_bar.text = ''
         app.invalidate()
 
 
