@@ -1,12 +1,10 @@
 language: python
 python:
   - "3.6"
-  - "3.7"
   - "3.7-dev"
 
 install:
-  - "pip install pipenv"
-  - "pipenv shell"
+  - "pip install -r requirements.txt"
 
 script:
   - "python -m pytest"

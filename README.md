@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mdtomo/rpirelayclient.svg?branch=master)]
+![Build Status](https://travis-ci.org/mdtomo/rpirelayclient.svg?branch=master)
 
 # Raspberry Pi Relay Client
 > Control a relay board with your Raspberry Pi over a LAN.
